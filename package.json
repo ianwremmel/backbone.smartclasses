@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "name": "backbone.smartclasses",
+  "description": "Automattically add and remove class names from views."
+  "scripts": {
+    "test": "./node_modules/grunt-cli/bin/grunt test"
+  },
+  "author": "Ian W. Remmel <design@ianwremmel.com>",
+  "devDependencies": {
+    "underscore": "~1.5.2",
+    "backbone": "~1.0.0",
+    "coffee-script": "~1.6.3",
+    "mocha": "~1.12.1",
+    "chai": "~1.7.2",
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-mocha": "~0.4.1",
+    "grunt-mocha-cli": "~1.1.0"
+  }
+}
