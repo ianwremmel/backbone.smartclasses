@@ -12,7 +12,7 @@ This plugin was initially conceived for dealing with the case of adding and remo
 Add the computed hash to a View to automatically add/remove classes:
 
 ```
-  computed:
+  smartclasses:
     <className>:
       deps:[]
       test: <function>
@@ -60,7 +60,7 @@ The following JS and CSS show how to automatically show and hide a view based on
 
 ```JavaScript
   Backbone.View.extend({
-    computed: {
+    smartclasses: {
       hidden: {
         deps: [
           'firstName',
@@ -78,5 +78,6 @@ The following JS and CSS show how to automatically show and hide a view based on
   });
 ```
 
-# TODO
-- Merge with Backbone.Computed. (these two plugins have very different motivations, but very similar codebases. Moreover, Backbone.Computed has a name that's compatible with smartclasses)
+## TODO
+
+- Add support for triggers outside of change events, e.g. elEvents, modelEvents, collectionEvents
