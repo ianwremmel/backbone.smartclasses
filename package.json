@@ -6,9 +6,10 @@
     "test": "./node_modules/grunt-cli/bin/grunt test"
   },
   "author": "Ian W. Remmel <design@ianwremmel.com>",
-  "dependencis": {
+  "dependencies": {
     "underscore": "~1.5.2",
-    "backbone": "~1.0.0"
+    "backbone": "~1.0.0",
+    "jquery": "~1.8.3"
   },
   "devDependencies": {
     "coffee-script": "~1.6.3",
@@ -21,6 +22,7 @@
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-mocha": "~0.4.1",
-    "grunt-mocha-cli": "~1.1.0"
+    "grunt-mocha-cli": "~1.1.0",
+    "sinon": "~1.7.3"
   }
 }
