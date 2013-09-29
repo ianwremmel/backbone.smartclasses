@@ -1,6 +1,7 @@
 _ = require 'underscore'
 jQuery = require 'jquery'
 Backbone = require 'backbone'
+Cocktail = require '../bower_components/cocktail/Cocktail.js'
 
 # These seems like the wrong way to point Backbone at jQuery, but it seems to
 # work.
@@ -10,6 +11,7 @@ sinon = require 'sinon'
 chai = require 'chai'
 
 smartclasses = require '../lib/backbone.smartclasses.js'
+Cocktail.patch Backbone
 
 assert = chai.assert
 
@@ -28,8 +30,7 @@ describe 'View', ->
 
 		it 'initializes each smart class definition', ->
 			view = new Backbone.View.extend
-				initialize: ->
-					@initSmartclasses()
+				mixins: [smartclasses]
 				smartclasses:
 					active: {}
 					age: {}
@@ -47,8 +48,7 @@ describe 'View', ->
 			it 'is required', ->
 				assert.throws ->
 					new Backbone.View
-						initialize: ->
-							@initSmartclasses()
+						mixins: [smartclasses]
 
 						smartclasses:
 							testClass: {}
@@ -56,8 +56,7 @@ describe 'View', ->
 			it 'cannot be empty', ->
 				assert.throws ->
 					new Backbone.View
-						initialize: ->
-							@initSmartclasses()
+						mixins: [smartclasses]
 
 						smartclasses:
 							testClass:
@@ -71,8 +70,7 @@ describe 'View', ->
 					age: 27
 
 				view = new Backbone.View.extend
-					initialize: ->
-						initSmartclasses()
+					mixins: [smartclasses]
 
 					smartclasses:
 						active:
