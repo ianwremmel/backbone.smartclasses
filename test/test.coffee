@@ -12,7 +12,7 @@ assert = chai.assert
 
 smartclasses = require '../lib/backbone.smartclasses.js'
 
-Cocktail = require 'cocktail';
+Cocktail = require 'Cocktail';
 Cocktail.patch(Backbone);
 
 describe 'Backbone.Smartclasses', ->
