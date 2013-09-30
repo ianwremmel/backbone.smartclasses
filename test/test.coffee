@@ -179,10 +179,6 @@ describe 'Backbone.Smartclasses', ->
                 ]
           view = new View
 
-    describe '#target', ->
-      it 'is not required'
-      it 'specifies which element to alter'
-
   describe 'initialize()', ->
     it 'requires the View to have a `model`', ->
       View = Backbone.View.extend

@@ -82,3 +82,4 @@ The following JS and CSS show how to automatically show and hide a view based on
 
 - Add support for triggers outside of change events, e.g. elEvents, modelEvents, collectionEvents
 - Add support for additional attributes (e.g. it may be desirable to alter the aria attributes of View)
+- Add support for altering elements other than this.$el
