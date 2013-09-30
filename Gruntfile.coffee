@@ -1,10 +1,10 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
-  grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
 
   grunt.loadNpmTasks 'grunt-mocha-cli'
+  grunt.loadNpmTasks 'grunt-umd'
 
   grunt.initConfig
     pkg:
@@ -37,10 +37,16 @@ module.exports = (grunt) ->
           ]
           reporter: 'spec'
 
-    copy:
+    umd:
       dist:
-        dest: 'dist/backbone.smartclasses.js'
         src: 'lib/backbone.smartclasses.js'
+        dest: 'dist/backbone.smartclasses.js'
+        objectToExport: 'smartclasses'
+        globalAlias: 'smartclasses'
+        deps:
+          default: ['Backbone', '_']
+          amd: ['backbone', 'lodash']
+          cjs: ['backbone', 'lodash']
 
     uglify:
       dist:
@@ -54,16 +60,20 @@ module.exports = (grunt) ->
   grunt.registerTask 'default', [
     'clean:dist'
     'jshint:lib'
+    'umd:dist'
     'mochacli'
-    'copy'
     'uglify'
   ]
 
   grunt.registerTask 'test', [
+    'clean:dist'
     'jshint:lib'
+    'umd:dist'
     'mochacli:cli'
   ]
   grunt.registerTask 'travis', [
+    'clean:dist'
     'jshint:lib'
+    'umd:dist'
     'mochacli:travis'
   ]

@@ -10,7 +10,7 @@ sinon = require 'sinon'
 chai = require 'chai'
 assert = chai.assert
 
-smartclasses = require '../lib/backbone.smartclasses.js'
+smartclasses = require '../dist/backbone.smartclasses.js'
 
 Cocktail = require 'Cocktail';
 Cocktail.patch(Backbone);

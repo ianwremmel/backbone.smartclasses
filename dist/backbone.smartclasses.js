@@ -1,8 +1,15 @@
-var _ = require('lodash');
-var $ = require('jquery');
-var Backbone = require('backbone');
-
-module.exports = {
+(function(root, factory) {
+    if(typeof exports === 'object') {
+        module.exports = factory(require('backbone'), require('lodash'));
+    }
+    else if(typeof define === 'function' && define.amd) {
+        define(['backbone', 'lodash'], factory);
+    }
+    else {
+        root.smartclasses = factory(root.Backbone, root._);
+    }
+}(this, function(Backbone, _) {
+var smartclasses = {
   initialize: function(options) {
     if (!(this instanceof Backbone.View)) {
       // TODO consider using a looser test for what can and cannot use
@@ -81,3 +88,6 @@ module.exports = {
     }
   }
 };
+
+    return smartclasses;
+}));
