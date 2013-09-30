@@ -23,11 +23,19 @@ module.exports = (grunt) ->
           src: 'lib'
 
     mochacli:
-      dist: 'test/test.coffee'
-      options:
-        compilers:[
-          'coffee:coffee-script'
-        ]
+      travis:
+        dist: 'test/test.coffee'
+        options:
+          compilers:[
+            'coffee:coffee-script'
+          ]
+      cli:
+        dist: 'test/test.coffee'
+        options:
+          compilers:[
+            'coffee:coffee-script'
+          ]
+          reporter: 'spec'
 
     copy:
       dist:
@@ -53,5 +61,9 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'jshint:lib'
-    'mochacli'
+    'mochacli:cli'
+  ]
+  grunt.registerTask 'travis', [
+    'jshint:lib'
+    'mochacli:travis'
   ]

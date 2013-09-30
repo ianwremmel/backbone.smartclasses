@@ -19,6 +19,7 @@ describe 'Backbone.Smartclasses', ->
   it 'is a mixin', ->
     View = Backbone.View.extend
       mixins: [smartclasses]
+      model: new Backbone.Model
 
     assert.isDefined View::initialize
     assert.isFunction View::initialize
@@ -46,19 +47,21 @@ describe 'Backbone.Smartclasses', ->
     assert.doesNotThrow ->
       View = Backbone.View.extend
         mixins: [smartclasses]
+        model: new Backbone.Model
       view = new View
 
   it 'is not required', ->
     assert.doesNotThrow ->
       View = Backbone.View.extend
         mixins: [smartclasses]
+        model: new Backbone.Model
       view = new View
 
   describe '#smartclasses', ->
     it 'can be set via extend', ->
-      View =Backbone.View.extend
+      View = Backbone.View.extend
         mixins: [smartclasses]
-
+        model: new Backbone.Model
         smartclasses:
           active:
             deps: ['active']
@@ -71,7 +74,7 @@ describe 'Backbone.Smartclasses', ->
     it 'can be set via options', ->
       View = Backbone.View.extend
         mixins: [smartclasses]
-
+        model: new Backbone.Model
       view = new View
         smartclasses:
           active:
@@ -83,7 +86,7 @@ describe 'Backbone.Smartclasses', ->
       it 'can be set via options and extend', ->
         View = Backbone.View.extend
           mixins: [smartclasses]
-
+          model: new Backbone.Model
           smartclasses:
             active:
               deps: ['active']
@@ -100,7 +103,7 @@ describe 'Backbone.Smartclasses', ->
     it 'can be overridden via options', ->
       View = Backbone.View.extend
         mixins: [smartclasses]
-
+        model: new Backbone.Model
         smartclasses:
           active:
             deps: ['active']
@@ -118,20 +121,23 @@ describe 'Backbone.Smartclasses', ->
         assert.throws ->
           View = Backbone.View.extend
             mixins: [smartclasses]
+            model: new Backbone.Model
             smartclasses:
               active: {}
 
           view = new View
 
+      it 'cannot be empty', ->
         assert.throws ->
           View = Backbone.View.extend
             mixins: [smartclasses]
+            model: new Backbone.Model
             smartclasses:
               active:
                 deps: []
           view = new View
 
-      it 'specified which fields may induce a change', ->
+      it 'specifies which fields may induce a change', ->
         test = sinon.spy()
         model = new Backbone.Model
           active: false
@@ -165,7 +171,7 @@ describe 'Backbone.Smartclasses', ->
         assert.doesNotThrow ->
           View = Backbone.View.extend
             mixins: [smartclasses]
-
+            model: new Backbone.Model
             smartclasses:
               active:
                 deps: [
@@ -177,5 +183,26 @@ describe 'Backbone.Smartclasses', ->
       it 'is not required'
       it 'specifies which element to alter'
 
-  describe 'initialize', ->
-    it 'initalizes each smartclass definition'
+  describe 'initialize()', ->
+    it 'requires the View to have a `model`', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+
+      assert.throws ->
+        view = new View
+
+      assert.doesNotThrow ->
+        model = new Backbone.Model
+        view = new View model: model
+
+  describe 'test()', ->
+    describe '_test()', ->
+      it 'adjusts truthiness to include 0', ->
+        assert.ok smartclasses._test 0
+        assert.ok smartclasses._test true
+        assert.ok smartclasses._test 'a string'
+        assert.notOk smartclasses._test false
+        assert.notOk smartclasses._test ''
+        assert.notOk smartclasses._test null
+        assert.notOk smartclasses._test undefined
+        assert.notOk smartclasses._test NaN
