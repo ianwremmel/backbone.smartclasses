@@ -52,5 +52,6 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'test', [
+    'jshint:lib'
     'mochacli'
   ]

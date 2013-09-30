@@ -1,7 +1,6 @@
-_ = require 'underscore'
+_ = require 'lodash'
 jQuery = require 'jquery'
 Backbone = require 'backbone'
-Cocktail = require '../bower_components/cocktail/Cocktail.js'
 
 # These seems like the wrong way to point Backbone at jQuery, but it seems to
 # work.
@@ -9,67 +8,136 @@ Backbone.$ = jQuery
 
 sinon = require 'sinon'
 chai = require 'chai'
-
-smartclasses = require '../lib/backbone.smartclasses.js'
-Cocktail.patch Backbone
-
 assert = chai.assert
 
-describe 'View', ->
-  describe '#initSmartclasses()', ->
-    it 'exists', ->
-      # this test basically confirms that require is working correctly and
-      # loading the smartclasses module did, in fact, alter the global Backbone
-      # instance.
-      assert.isDefined Backbone.View::initSmartclasses
-      assert.isFunction Backbone.View::initSmartclasses
-      view = new Backbone.View
-      assert.isDefined view.initSmartclasses
-      assert.isFunction view.initSmartclasses
+smartclasses = require '../lib/backbone.smartclasses.js'
 
+Cocktail = require 'cocktail';
+Cocktail.patch(Backbone);
 
-    it 'initializes each smart class definition', ->
-      view = new Backbone.View.extend
+describe 'Backbone.Smartclasses', ->
+  it 'is a mixin', ->
+    View = Backbone.View.extend
+      mixins: [smartclasses]
+
+    assert.isDefined View::initialize
+    assert.isFunction View::initialize
+
+    view = new View
+    assert.isDefined view.initialize
+    assert.isFunction view.initialize
+
+  it 'can only be applied to views', ->
+    assert.throws ->
+      Collection = Backbone.Collection.extend
         mixins: [smartclasses]
-        smartclasses:
-          active: {}
-          age: {}
-        _initSmartclass: sinon.spy()
+      collection = new Collection
 
-      assert.isDefined view._initSmartclass
-      assert.isFunction view._initSmartclass
+    assert.throws ->
+      Router = Backbone.Router.extend
+        mixins: [smartclasses]
+      router = new Router
 
-      assert.equal view._initSmartclass.callCount, 2
+    assert.throws ->
+      Model = Backbone.Model.extend
+        mixins: [smartclasses]
+      model = new Model
 
+    assert.doesNotThrow ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+      view = new View
 
+  it 'is not required', ->
+    assert.doesNotThrow ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+      view = new View
 
   describe '#smartclasses', ->
+    it 'can be set via extend', ->
+      View =Backbone.View.extend
+        mixins: [smartclasses]
+
+        smartclasses:
+          active:
+            deps: ['active']
+
+      view = new View
+
+      assert.isDefined view.smartclasses
+      assert.isDefined view.smartclasses.active
+
+    it 'can be set via options', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+
+      view = new View
+        smartclasses:
+          active:
+            deps: ['active']
+
+      assert.isDefined view.smartclasses
+      assert.isDefined view.smartclasses.active
+
+      it 'can be set via options and extend', ->
+        View = Backbone.View.extend
+          mixins: [smartclasses]
+
+          smartclasses:
+            active:
+              deps: ['active']
+
+        view = new View
+          smartclasses:
+            'can-drive':
+              deps: ['age']
+
+        assert.isDefined view.smartclasses
+        assert.isDefined view.smartclasses.active
+        assert.isDefined view.smartclasses['can-drive']
+
+    it 'can be overridden via options', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+
+        smartclasses:
+          active:
+            deps: ['active']
+
+      view = new View
+        smartclasses:
+          active:
+            deps: ['inactive']
+
+      assert.equal view.smartclasses.active.deps.length, 1
+      assert.equal view.smartclasses.active.deps[0], 'inactive'
+
     describe '#deps', ->
       it 'is required', ->
         assert.throws ->
-          new Backbone.View
+          View = Backbone.View.extend
             mixins: [smartclasses]
-
             smartclasses:
-              testClass: {}
+              active: {}
 
-      it 'cannot be empty', ->
+          view = new View
+
         assert.throws ->
-          new Backbone.View
+          View = Backbone.View.extend
             mixins: [smartclasses]
-
             smartclasses:
-              testClass:
+              active:
                 deps: []
+          view = new View
 
-      it 'specifies which fields may induce a change', ->
+      it 'specified which fields may induce a change', ->
         test = sinon.spy()
-
         model = new Backbone.Model
           active: false
           age: 27
 
-        view = new Backbone.View.extend
+        View = Backbone.View.extend
           mixins: [smartclasses]
 
           smartclasses:
@@ -77,7 +145,10 @@ describe 'View', ->
               deps: [
                 'active'
               ]
-            test: test
+
+          test: test
+
+        view = new View model: model
 
         model.set age: 20
         assert.equal test.callCount, 0
@@ -85,12 +156,26 @@ describe 'View', ->
         model.set active: true
         assert.isTrue test.calledOnce
 
-        mode.set age: 12
+        model.set age: 12
         assert.isTrue test.calledOnce
 
+
     describe '#test', ->
-      it 'is not required'
+      it 'is not required', ->
+        assert.doesNotThrow ->
+          View = Backbone.View.extend
+            mixins: [smartclasses]
+
+            smartclasses:
+              active:
+                deps: [
+                  'active'
+                ]
+          view = new View
 
     describe '#target', ->
       it 'is not required'
       it 'specifies which element to alter'
+
+  describe 'initialize', ->
+    it 'initalizes each smartclass definition'
