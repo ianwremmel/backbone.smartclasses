@@ -257,34 +257,32 @@ describe 'Backbone.Smartclasses', ->
 
       model.set active: true
       assert.equal testDepsForTruthiness.callCount, 2
-    it 'returns true if all dependencies are truthy'
-    it 'returns false if any dependencies are falsy'
 
-  it 'adds and removes classes from View.$el', ->
-    # Since most of the functions used in smartclasses are buit using `bind` at
-    # runtime, they're difficult to test. For now, we'll need to settle for
-    # testing the final outcome.
-    View = Backbone.View.extend
-      mixins: [smartclasses]
-      smartclasses:
-        active:
-          deps: [
-            'active'
-          ]
+    it 'returns true if all dependencies are truthy', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
 
-    model = new Backbone.Model
-      active: true
+      model = new Backbone.Model
+        active: true,
+        age: 17,
+        weight: 0;
 
-    view = new View model: model
+      view = new View model: model
 
-    view.$el.addClass = sinon.spy()
-    view.$el.removeClass = sinon.spy()
+      assert.isTrue view.testDepsForTruthiness ['active', 'age', 'weight']
 
-    model.set active: false
-    assert.equal view.$el.removeClass.callCount, 1
+    it 'returns false if any dependencies are falsy', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
 
-    model.set active: true
-    assert.equal view.$el.addClass.callCount, 1
+      model = new Backbone.Model
+        active: true,
+        age: 17,
+        weight: null;
+
+      view = new View model: model
+
+      assert.isFalse view.testDepsForTruthiness ['active', 'age', 'weight']
 
   describe 'setClasses()', ->
     it 'is invoked when the View is initialized', ->
@@ -300,49 +298,96 @@ describe 'Backbone.Smartclasses', ->
       view = new View model: new Backbone.Model
       assert.equal view.setClasses.callCount, 1
 
-    it 'sets classes based on the initial values of their dependencies'
+    it 'sets classes based on the initial values of their dependencies', ->
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          active:
+            deps: [
+              'active'
+            ]
+          canDrive:
+            deps: [
+              'canDrive'
+            ]
 
+      model = new Backbone.Model
+        active: true
+        canDrive: false
 
-  # describe 'setSmartClass()', ->
-  #   it 'is invoked when a dependency changes', ->
-  #     setSmartClass = sinon.spy()
+      view = new View model: model
+      assert.isTrue view.$el.hasClass 'active'
+      assert.isFalse view.$el.hasClass 'canDrive'
 
-  #     View = Backbone.View.extend
-  #       mixins: [smartclasses]
-  #       smartclasses:
-  #         active:
-  #           deps: [
-  #             'active'
-  #           ]
-  #       setSmartClass: setSmartClass
+  describe 'setSmartclass()', ->
+    it 'is invoked when a dependency changes', ->
+      setSmartclass = sinon.spy()
 
-  #     model = new Backbone.Model
-  #       active: true
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          active:
+            deps: [
+              'active'
+            ]
+        setSmartclass: setSmartclass
 
-  #     view = new View model: model
+      # We test setClasses later; disable it for this test
+      View::setClasses = ->
 
-  #     model.set active: true
-  #     assert.equal setSmartClass.callCount, 1
+      model = new Backbone.Model
+        active: true
 
-  #   it 'calls smartclasses#<classname>#test', ->
-  #     test = sinon.stub true
+      view = new View model: model
 
-  #     View = Backbone.View.extend
-  #       mixins: [smartclasses]
-  #       smartclasses:
-  #         active:
-  #           deps: [
-  #             'active'
-  #           ]
-  #           test: test
-  #       setSmartClass: setSmartClass
+      model.set active: false
+      assert.equal setSmartclass.callCount, 1
 
-  #     model = new Backbone.Model
-  #       active: false
+    it 'calls smartclasses#<classname>#test', ->
+      test = sinon.spy()
 
-  #     view = new View model: model
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          active:
+            deps: [
+              'active'
+            ]
+            test: test
 
-  #     model.set active: true
-  #     assert.isTrue test.calledOnce
+      # We test setClasses later; disable it for this test
+      View::setClasses = ->
 
-  #   it 'adds or removes a class as appropriate'
+      model = new Backbone.Model
+        active: false
+
+      view = new View model: model
+
+      model.set active: true
+      assert.equal test.callCount, 1
+
+    it 'adds or removes a class as appropriate', ->
+      # Since most of the functions used in smartclasses are buit using `bind`
+      # at runtime, they're difficult to test. For now, we'll need to settle for
+      # testing the final outcome.
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          active:
+            deps: [
+              'active'
+            ]
+
+      model = new Backbone.Model
+        active: true
+
+      view = new View model: model
+
+      view.$el.addClass = sinon.spy()
+      view.$el.removeClass = sinon.spy()
+
+      model.set active: false
+      assert.equal view.$el.removeClass.callCount, 1
+
+      model.set active: true
+      assert.equal view.$el.addClass.callCount, 1
