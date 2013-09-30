@@ -1,9 +1,9 @@
 {
   "version": "0.0.1",
   "name": "backbone.smartclasses",
-  "description": "Automattically add and remove class names from views.",
+  "description": "Automatically add and remove class names from views.",
   "scripts": {
-    "test": "./node_modules/grunt-cli/bin/grunt test"
+    "test": "./node_modules/grunt-cli/bin/grunt travis"
   },
   "author": "Ian W. Remmel <design@ianwremmel.com>",
   "dependencies": {
