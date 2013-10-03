@@ -72,11 +72,16 @@ var smartclasses = {
   testDepsForTruthiness: function(deps) {
     // we need to provide an actual callback to `every()`, otherwise 0 evaluates
     // to false.
-    return _(this.model.pick(deps)).values().every(this._test);
+    if (deps.length === 1) {
+      return this._test(this.model.get(deps[0]));
+    }
+    else {
+      return _(this.model.pick(deps)).values().every(this._test);
+    }
   },
 
   _test: function(value) {
-    return value || value === 0;
+    return !!value || value === 0;
   },
 
   setSmartclass: function(test, className) {
