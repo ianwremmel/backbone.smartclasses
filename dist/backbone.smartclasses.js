@@ -73,6 +73,7 @@ var smartclasses = {
     // we need to provide an actual callback to `every()`, otherwise 0 evaluates
     // to false.
     if (deps.length === 1) {
+      // TODO this needs a test
       return this._test(this.model.get(deps[0]));
     }
     else {
