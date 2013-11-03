@@ -61,7 +61,7 @@ module.exports = (grunt) ->
     'clean:dist'
     'jshint:src'
     'umd:dist'
-    'mochacli'
+    'mochacli:cli'
     'uglify'
   ]
 

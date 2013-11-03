@@ -32,10 +32,12 @@ And invoke the initializer:
 
 ###Options
 
-#### deps
+#### deps (required for model-bound views; optional for collection-bound views)
 Type: `Array`
 
-Specifies the fields on which to listen for changes
+Specifies the fields (for models) or events (for collections) induce recomputation of smartclasses. 
+
+It is strongly recommend that, for performance reasons, you specify this property for collection-bound views; in most cases, you probably only care about `['add', 'remove']` or `[change:<specific-field>]`.
 
 #### test (optional)
 Type: `function`
@@ -77,3 +79,4 @@ The following JS and CSS show how to automatically show and hide a view based on
 - Add support for triggers outside of change events, e.g. elEvents, modelEvents, collectionEvents
 - Add support for additional attributes (e.g. it may be desirable to alter the aria attributes of View)
 - Add support for altering elements other than this.$el
+- Add support for nested models/collections (e.g. via backbone.relational)

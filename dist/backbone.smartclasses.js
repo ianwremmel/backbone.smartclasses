@@ -26,12 +26,19 @@ var smartclasses = {
 
     var target, test;
     if (this.model) {
-      target = this.model;
+      this._bindModel(this.model);
+    }
+    else if (this.collection) {
+      this._bindCollection(this.collection);
     }
     else {
       throw new Error('Backbone.Smartclasses only works on bound Views.');
     }
 
+    this.setClasses();
+  },
+
+  _bindModel: function(target) {
     this.smarttests = {};
 
     _(this.smartclasses).each(function(config, className) {
@@ -59,8 +66,24 @@ var smartclasses = {
       }, this);
 
     }, this);
+  },
 
-    this.setClasses();
+  _bindCollection: function(target) {
+    this.smarttests = {};
+    _(this.smartclasses).each(function(config, className) {
+      var deps = config.deps || ['add', 'remove', 'change'];
+
+      if (!config.test || typeof config.test !== 'function') {
+        throw new Error('Missing test() for ' + className);
+      }
+
+      var test = _.bind(config.test, this);
+      var setSmartclass = _.bind(this.setSmartclass, this, test, className);
+      _(deps).each(function(dep) {
+        this.listenTo(target, dep, setSmartclass);
+      }, this);
+
+    }, this);
   },
 
   setClasses: function() {

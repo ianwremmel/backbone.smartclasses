@@ -117,13 +117,23 @@ describe 'Backbone.Smartclasses', ->
       assert.equal view.smartclasses.active.deps[0], 'inactive'
 
     describe '#deps', ->
-      it 'is required', ->
+      it 'is required if the view is bound to a model', ->
         assert.throws ->
           View = Backbone.View.extend
             mixins: [smartclasses]
             model: new Backbone.Model
             smartclasses:
               active: {}
+
+          view = new View
+
+        assert.doesNotThrow ->
+          View = Backbone.View.extend
+            mixins: [smartclasses]
+            collection: new Backbone.Collection
+            smartclasses:
+              active:
+                test: ->
 
           view = new View
 
@@ -168,9 +178,34 @@ describe 'Backbone.Smartclasses', ->
         model.set age: 12
         assert.isTrue test.calledOnce
 
+    it 'specifies which collection events induce a change', ->
+      spy = sinon.spy()
+
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          active:
+            deps: ['add']
+            test: spy
+
+      model1 = new Backbone.Model
+        id: 1
+
+      collection = new Backbone.Collection
+
+      view = new View collection: collection
+
+      collection.add model1
+      assert.equal spy.callCount, 1
+
+      model1.set age: 27
+      assert.equal spy.callCount, 1
+
+      collection.remove model1
+      assert.equal spy.callCount, 1
 
     describe '#test', ->
-      it 'is not required', ->
+      it 'is not required for models', ->
         assert.doesNotThrow ->
           View = Backbone.View.extend
             mixins: [smartclasses]
@@ -182,8 +217,17 @@ describe 'Backbone.Smartclasses', ->
                 ]
           view = new View
 
+      it 'is required for collections', ->
+        assert.throws  ->
+          View = Backbone.View.extend
+            mixins: [smartclasses]
+            collection: new Backbone.Collection
+            smartclasses:
+              active: {}
+          view = new View
+
   describe 'initialize()', ->
-    it 'requires the View to have a `model`', ->
+    it 'requires the View to have a `model` or `collection`', ->
       View = Backbone.View.extend
         mixins: [smartclasses]
 
@@ -193,6 +237,10 @@ describe 'Backbone.Smartclasses', ->
       assert.doesNotThrow ->
         model = new Backbone.Model
         view = new View model: model
+
+      assert.doesNotThrow ->
+        collection = new Backbone.Collection
+        view = new View collection: collection
 
   describe 'testDepsForTruthiness()', ->
     describe '_test()', ->
@@ -257,6 +305,31 @@ describe 'Backbone.Smartclasses', ->
 
       model.set active: true
       assert.equal testDepsForTruthiness.callCount, 2
+
+    it 'is invoked when a model is added, removed, or changed in a collection', ->
+      spy = sinon.spy()
+
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          empty:
+            test: spy
+
+      model1 = new Backbone.Model
+        id: 1
+
+      collection = new Backbone.Collection
+
+      view = new View collection: collection
+
+      collection.add model1
+      assert.equal spy.callCount, 1
+
+      model1.set age: 27
+      assert.equal spy.callCount, 2
+
+      collection.remove model1
+      assert.equal spy.callCount, 3
 
     it 'returns true if all dependencies are truthy', ->
       View = Backbone.View.extend
