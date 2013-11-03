@@ -54,6 +54,9 @@ var smartclasses = {
         if (target.get(dep) instanceof Backbone.Collection) {
           this.listenTo(target.get(dep), 'add remove change', setSmartclass);
         }
+        if (target.get(dep) instanceof Backbone.Model) {
+          this.listenTo(target.get(dep), 'change', setSmartclass);
+        }
         else {
           this.listenTo(target, 'change:' + dep, setSmartclass);
         }
