@@ -18,9 +18,9 @@ module.exports = (grunt) ->
     jshint:
       options:
         jshintrc: '.jshintrc'
-      lib:
+      src:
         files:
-          src: 'lib'
+          src: 'src'
 
     mochacli:
       travis:
@@ -39,7 +39,7 @@ module.exports = (grunt) ->
 
     umd:
       dist:
-        src: 'lib/backbone.smartclasses.js'
+        src: 'src/backbone.smartclasses.js'
         dest: 'dist/backbone.smartclasses.js'
         objectToExport: 'smartclasses'
         globalAlias: 'smartclasses'
@@ -54,12 +54,12 @@ module.exports = (grunt) ->
           sourceMap: 'dist/backbone.smartclasses.map'
           mangle: false
         files:
-          'dist/backbone.smartclasses.min.js': 'lib/backbone.smartclasses.js'
+          'dist/backbone.smartclasses.min.js': 'src/backbone.smartclasses.js'
 
 
   grunt.registerTask 'default', [
     'clean:dist'
-    'jshint:lib'
+    'jshint:src'
     'umd:dist'
     'mochacli'
     'uglify'
@@ -67,13 +67,13 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'test', [
     'clean:dist'
-    'jshint:lib'
+    'jshint:src'
     'umd:dist'
     'mochacli:cli'
   ]
   grunt.registerTask 'travis', [
     'clean:dist'
-    'jshint:lib'
+    'jshint:src'
     'umd:dist'
     'mochacli:travis'
   ]
