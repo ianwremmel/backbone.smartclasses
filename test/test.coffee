@@ -464,3 +464,42 @@ describe 'Backbone.Smartclasses', ->
 
       model.set active: true
       assert.equal view.$el.addClass.callCount, 1
+
+  describe 'nested collection support', ->
+    it 'induces a change when a model-bound views\'s dependency is a collection and an add, remove, or update occures', ->
+      spy = sinon.spy()
+
+      View = Backbone.View.extend
+        mixins: [smartclasses]
+        smartclasses:
+          empty:
+            deps: ['people']
+            test: spy
+
+      collection = new Backbone.Collection
+      model = new Backbone.Model
+        people: collection
+
+      view = new View
+        model: model
+
+      m1 = new Backbone.Model id: 1
+      m2 = new Backbone.Model id: 2
+      m3 = new Backbone.Model id: 3
+
+      collection.add m1
+      assert.equal spy.callCount, 2
+
+      collection.add m2
+      assert.equal spy.callCount, 3
+
+      collection.add m3
+      assert.equal spy.callCount, 4
+
+      collection.remove m3
+      assert.equal spy.callCount, 5
+
+      m2.set name: 'steve'
+      assert.equal spy.callCount, 6
+
+

@@ -62,7 +62,12 @@ var smartclasses = {
 
       // Then, bind test to each dependency.
       _(config.deps).each(function(dep) {
-        this.listenTo(target, 'change:' + dep, setSmartclass);
+        if (target.get(dep) instanceof Backbone.Collection) {
+          this.listenTo(target.get(dep), 'add remove change', setSmartclass);
+        }
+        else {
+          this.listenTo(target, 'change:' + dep, setSmartclass);
+        }
       }, this);
 
     }, this);
