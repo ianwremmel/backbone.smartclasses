@@ -5,6 +5,7 @@
   "scripts": {
     "test": "./node_modules/grunt-cli/bin/grunt travis"
   },
+  "main": "src/backbone.smartclasses.js",
   "author": "Ian W. Remmel <design@ianwremmel.com>",
   "dependencies": {
     "lodash": "~2.1.0",
