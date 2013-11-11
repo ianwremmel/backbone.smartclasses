@@ -6,6 +6,11 @@ While Backbone.ModelBinding (and, I assume, most of the other legitimate model b
 
 This plugin was conceived for dealing with the case of adding and removing classnames from a View's $el.
 
+## Dependencies
+
+`backbone.smartclasses` has hard dependencies on [lodash](http://www.lodash.com) and [backbone](http://www.backbone.org) however, it is intended to work as a [cocktail](https://github.com/onsi/cocktail) mixin. While you can include `backbone.smartclasses` without including `cocktail`, it's unlikely to have any effect.
+
+In order to run tests in a node-like environment, I've included a forked build of `cocktail` as a devDependency, which I'll likely be removing at some point. You'll want to include onsi's original version and, optionally, use [browserify](http://browserify.org/) if you need to include it in your own node-like environment.
 
 ## Usage
 
