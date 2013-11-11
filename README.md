@@ -8,7 +8,7 @@ This plugin was conceived for dealing with the case of adding and removing class
 
 ## Dependencies
 
-`backbone.smartclasses` has hard dependencies on [lodash](http://www.lodash.com) and [backbone](http://www.backbone.org) however, it is intended to work as a [cocktail](https://github.com/onsi/cocktail) mixin. While you can include `backbone.smartclasses` without including `cocktail`, it's unlikely to have any effect.
+`backbone.smartclasses` has hard dependencies on [lodash](http://www.lodash.com) and [backbone](http://www.backbone.org), however, it is intended to work as a [cocktail](https://github.com/onsi/cocktail) mixin. While you can include `backbone.smartclasses` without including `cocktail`, it's unlikely to have any effect.
 
 In order to run tests in a node-like environment, I've included a forked build of `cocktail` as a devDependency, which I'll likely be removing at some point. You'll want to include onsi's original version and, optionally, use [browserify](http://browserify.org/) if you need to include it in your own node-like environment.
 
@@ -69,7 +69,7 @@ The following JS and CSS show how to automatically show and hide a view based on
         ]
       },
       test: function() {
-        return this.has('firstName') && this.has('lastName');
+        return !(this.has('firstName') && this.has('lastName'));
       }
     },
 
