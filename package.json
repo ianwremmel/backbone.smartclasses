@@ -7,6 +7,9 @@
   },
   "main": "src/backbone.smartclasses.js",
   "author": "Ian W. Remmel <design@ianwremmel.com>",
+  "keywords": [
+    "backbone"
+  ],
   "dependencies": {
     "lodash": "~2.1.0",
     "backbone": "~1.0.0",
