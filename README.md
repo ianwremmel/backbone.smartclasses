@@ -1,4 +1,4 @@
-# Backbone.Smartclasses [![Build Status](https://travis-ci.org/ianwremmel/backbone.smartclasses.png)](https://travis-ci.org/ianwremmel/backbone.smartclasses)[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+# Backbone.Smartclasses [![Build Status](https://travis-ci.org/ianwremmel/backbone.smartclasses.png)](https://travis-ci.org/ianwremmel/backbone.smartclasses) [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 ## Motivation
 
