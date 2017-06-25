@@ -1,5 +1,7 @@
 # Backbone.Smartclasses [![Build Status](https://travis-ci.org/ianwremmel/backbone.smartclasses.png)](https://travis-ci.org/ianwremmel/backbone.smartclasses) [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ianwremmel/backbone.smartclasses.svg)](https://greenkeeper.io/)
+
 ## Motivation
 
 While Backbone.ModelBinding (and, I assume, most of the other legitimate model binding plugins) provides the ability to bind data values to view element attributes, it requires three data attributes and a custom function to alter class names in the general case. In fact, it actually requires more markup and more complex JavaScript than simply adding a model listener to the view class. More over, there's no way (in markup) to bind a model attribute to the View's $el at all.
